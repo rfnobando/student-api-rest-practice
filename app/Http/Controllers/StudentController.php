@@ -18,9 +18,14 @@ class StudentController extends Controller
     {
         $filter = new StudentFilter();
         $queryItems = $filter->transform($request);
+        $includeGrades = $request->query('includeGrades');
+        $students = Student::where($queryItems);
 
-        $students = Student::where($queryItems)->paginate()->appends($request->query());
-        return new StudentCollection($students);
+        if ($includeGrades) {
+            $students = $students->with('grades');
+        }
+
+        return new StudentCollection($students->paginate()->appends($request->query()));
     }
 
     /**
