@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Http\Requests\StoreGradeRequest;
 use App\Http\Requests\UpdateGradeRequest;
+use App\Http\Resources\GradeCollection;
 
 class GradeController extends Controller
 {
@@ -13,7 +14,8 @@ class GradeController extends Controller
      */
     public function index()
     {
-        //
+        $grades = Grade::paginate();
+        return new GradeCollection($grades);
     }
 
     /**
