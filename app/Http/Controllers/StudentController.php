@@ -7,6 +7,7 @@ use App\Models\Student;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Http\Resources\StudentCollection;
+use App\Http\Resources\StudentResource;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -49,7 +50,13 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        //
+        $includeGrades = request()->query('includeGrades');
+
+        if ($includeGrades) {
+            return new StudentResource($student->loadMissing('grades'));
+        }
+        
+        return new StudentResource($student);
     }
 
     /**
