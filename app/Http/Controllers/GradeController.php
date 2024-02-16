@@ -2,19 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\GradeFilter;
 use App\Models\Grade;
 use App\Http\Requests\StoreGradeRequest;
 use App\Http\Requests\UpdateGradeRequest;
 use App\Http\Resources\GradeCollection;
+use Illuminate\Http\Request;
 
 class GradeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $grades = Grade::paginate();
+        $filter = new GradeFilter();
+        $queryItems = $filter->transform($request);
+        $grades = Grade::where($queryItems)->paginate()->appends($request->query());
+
         return new GradeCollection($grades);
     }
 
